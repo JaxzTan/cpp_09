@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 18:40:49 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/07/30 18:44:11 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/08/15 18:56:21 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,3 +31,8 @@ BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &other)
     return *this;
 }
 
+void ft_process(const string &filename)
+{
+    BitcoinExchange exchange;
+    
+}
