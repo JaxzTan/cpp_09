@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 18:40:52 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/08/15 18:56:13 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/08/19 11:00:19 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,38 @@
 
 #include <iostream>
 #include <map>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <exception>
 
-typedef std::map<std::string, int> map;
 typedef std::string string;
 
+enum error{
+    INVALID_INPUT,
+    FILE_NOT_FOUND,
+    PARSE_ERROR,
+    EMPTY_DATA
+};
+
 class BitcoinExchange {
-    // private:
+    private:
+        // error _error;
+        std::map<string, double> _Data;
+        std::map<string, double> _InputData;
+
     public:
-        std::map<string, int> _data;
         BitcoinExchange();
         ~BitcoinExchange();
         BitcoinExchange(const BitcoinExchange &other);
         BitcoinExchange &operator=(const BitcoinExchange &other);
-        
-    };
+        void    ft_process(const string &filename, string inputFile);
+        int     ft_error(error err) const;
+        std::map<string, double>     ft_get(const string &filename, char sep) const;
 
-void    ft_process(const string &filename);
+
+        class Invalid : public std::exception {
+            public:
+                virtual const char *what() const throw();
+        };
+    };

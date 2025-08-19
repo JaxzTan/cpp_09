@@ -3,14 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: chtan <chtan@student.42kl.edu.my>          +#+  +:+       +#+         #
+#    By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/09 12:35:05 by chtan             #+#    #+#              #
-#    Updated: 2025/06/15 09:15:39 by chtan            ###   ########.fr        #
+#    Updated: 2025/08/19 09:21:56 by jaxztan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME        = ./Program
+NAME        = ./btc
 CXX         = c++
 CXXFLAGS    = -Wall -Wextra -Werror -pedantic -std=c++98 -g3
 SRC_DIR     = ./src
@@ -44,6 +44,12 @@ fclean: clean
 re: fclean all
 
 run: $(NAME)
-	@./$(NAME)
+	@./$(NAME) test_file/test.txt
+
+invalid: $(NAME)
+	@./$(NAME) test_file/empty.txt
+	@sleep 1
+	@clear
+	@./$(NAME) test_file/invalid.txt
 
 .PHONY: all clean fclean re run
