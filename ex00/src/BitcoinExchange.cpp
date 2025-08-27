@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 18:40:49 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/08/21 13:42:05 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/08/27 16:35:40 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &other)
 {
     if (this != &other) {
         _Data = other._Data;
-        _InputData = other._InputData;
     }
     return *this;
 }
@@ -38,102 +37,118 @@ std::map<std::string, double> BitcoinExchange::ft_get(const std::string &filenam
     std::map<std::string, double>   data;
     std::string                     line;
 
-    if (!file.is_open())
-        return(std::map<std::string, double>());
-    // Skip the first line (header)
+    file.open(filename);
+    if (filename != "data.csv")
+    {
+        ft_error(FILE_NOT_FOUND);
+        return (std::map<std::string, double>());
+    }
     std::getline(file, line);
 
     while (std::getline(file, line)) {
         std::istringstream iss(line);
-        std::string              date;
-        std::string              value;
+        string              date;
+        string              value;
         std::getline(iss, date, sep);
         std::getline(iss, value);
 
-        if (date.empty() || value.empty()) {
-            ft_error(INVALID_INPUT);
-            return(std::map<std::string, double>());
-        }
-        if (trim == true)
+        if (trim == true && !date.empty() && !value.empty())
         {
             date = date.substr(0, date.length() - 1);
             value = value.substr(1, value.length());
         }
+        if (date.empty() || value.empty())
+            date = "0000-00-00", value = "0";
         data.insert(std::make_pair(date, std::stod(value)));
     }
     file.close();
     return(data);
 }
 
-bool BitcoinExchange::is_valid_date(const std::string &date) const
+static bool	isLeapYear(int year)
 {
-    // Check if the date is in the format YYYY-MM-DD
-    if (date.size() != 10 || date[4] != '-' || date[7] != '-')
+	return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
+}
+
+bool    BitcoinExchange::is_valid_date(const std::string &date) const
+{
+    if (date.length() != 10 || date[4] != '-' || date[7] != '-')
         return false;
 
-    // Check if the year, month, and day are valid numbers
-    for (size_t i = 0; i < date.size(); ++i) {
-        if (i == 4 || i == 7)
-            continue; // Skip dashes
-        if (!isdigit(date[i]))
-            return false;
-    }
     int year = std::stoi(date.substr(0, 4));
     int month = std::stoi(date.substr(5, 2));
     int day = std::stoi(date.substr(8, 2));
-    if (year < 2009 || year > 2025 || month < 1 || month > 12 || day < 1 || day > 31 || year == 0 || month == 0 || day == 0)
-        return (false);
-    std::cout << "Year: " << year << ", Month: " << month << ", Day: " << day << std::endl;
+    if (year < 2009 || year > 2022 || month < 1 || month > 12 || day < 1)
+        return false;
+
+    int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    if (month == 2 && isLeapYear(year))
+        daysInMonth[1] = 29;
+
+    if (day > daysInMonth[month - 1] || (year == 2009 && month == 1 && day < 2))
+        return false;
+
     return true;
 }
 
-int BitcoinExchange::check_valid_date(std::map<std::string, double>::const_iterator it) const
+bool BitcoinExchange::is_valid_value(const double &value) const
 {
-    std::cout << "3it is (" <<it->first << ")" << std::endl;
-    if (!is_valid_date(it->first))
-        ft_error(INVALID_INPUT);
-}
-
-void BitcoinExchange::printing(std::map<std::string, double>::const_iterator it) const
-{
-        std::cout << it->first << " ==> " << it->second << std::endl;
+    if (value <= 0 || value > 1000)
+        return false;
+    return true;
 }
 
 double BitcoinExchange::find(const std::string &_date) const
 {
-    std::map<std::string, double>::const_iterator it = _Data.begin();
-    int year1 = std::stoi(_date.substr(0, 4));
-    int month1 = std::stoi(_date.substr(5, 2));
-    int day1 = std::stoi(_date.substr(8, 2));
-    double res;
-    std::string date;
-    if (it != _Data.end()) {
-        date = it->first;
-        int year2 = std::stoi(date.substr(0, 4));
-        int month2 = std::stoi(date.substr(5, 2));
-        int day2 = std::stoi(date.substr(8, 2));
-        if (year1 == year2 && month1 == month2 && day1 == day2)
-            return (std::stod(_date));
+    std::map<std::string, double>::const_iterator it = _Data.lower_bound(_date);
+
+    if (it != _Data.end() && it->first == _date) {
+        return it->second;
     }
-    // The rest of your logic here
-    return(res);
+    if (it == _Data.begin()) {
+        return 0.0;
+    }
+    --it;
+    return it->second;
 }
 
-void BitcoinExchange::ft_process(const string &filename, string inputFile)
+int BitcoinExchange::ft_process(const string &filename, string inputFile)
 {
+    std::ifstream   file;
+    string          line;
+
     _Data = ft_get(filename, ',', false);
-    _InputData = ft_get(inputFile.c_str(), '|', true);
-    std::cout << "Bitcoin Exchange Data:" << std::endl;
-    int i = 0;
-    for(std::map<std::string, double>::const_iterator it = _InputData.begin(); it != _InputData.end(); ++it) {
-        _Answer[i] = find(it->first);
-        check_valid_date(it);
-        printing(it);
-        i++;
+    file.open(inputFile);
+
+    std::cout << YELLOW << "Bitcoin Exchange Data:" << RESET << std::endl << std::endl;
+    std::getline(file, line);
+
+    while (std::getline(file, line))
+    {
+        std::istringstream  iss(line);
+        string              date;
+        string              value;
+        double              answer = 0.0;
+    
+        std::getline(iss, date, '|');
+        std::getline(iss, value);
+
+        if (!date.empty() && !value.empty())
+        {
+            date = date.substr(0, date.length() - 1);
+            value = value.substr(1, value.length());
+        }
+        answer = find(date);
+        if (!is_valid_value(answer) || date.empty() || value.empty() || !is_valid_value(std::stod(value))
+        || !is_valid_date(date))
+        {
+            ft_error(INVALID_INPUT);
+            continue;
+        }
+        std::cout << date << " => " << value << " = " << (answer * std::stod(value)) << std::endl;
     }
-    // for (std::map<std::string, double>::const_iterator it = _InputData.begin(); it != _InputData.end(); ++it) {
-    //     std::cout << "4it is (" << it->first << ")" << "==>" << it->second << std::endl;
-    // }
+    file.close();
+    return 0;
 }
 
 void    BitcoinExchange::ft_error(error err) const
@@ -155,9 +170,4 @@ void    BitcoinExchange::ft_error(error err) const
             std::cerr << "Error: Unknown error." << std::endl;
             break;
     }
-}
-
-const char *BitcoinExchange::Invalid::what() const throw()
-{
-    return ("Don't ask me what is the error, DDDD");
 }

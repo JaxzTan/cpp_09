@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 18:40:50 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/08/20 11:32:17 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/08/27 16:31:30 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 int main(int ac, char **av)
 {
     if (ac != 2) {
-        std::cerr << "Usage: " << av[0] << " <filename>" << std::endl;
+        std::cerr << "Error: Usage: " << av[0] << " <filename>" << std::endl;
         return 1;
     }
-    // (void)av;
     BitcoinExchange exchange;
-    exchange.ft_process("data.csv", av[1]); // everything go in here
+    if (exchange.ft_process("data.csv", av[1])) // everything go in here
+        return 1;
     return 0;
 }

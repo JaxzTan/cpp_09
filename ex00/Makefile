@@ -6,7 +6,7 @@
 #    By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/09 12:35:05 by chtan             #+#    #+#              #
-#    Updated: 2025/08/19 09:21:56 by jaxztan          ###   ########.fr        #
+#    Updated: 2025/08/22 15:00:25 by jaxztan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,7 @@ fclean: clean
 re: fclean all
 
 run: $(NAME)
-	@./$(NAME) test_file/test.txt
+	@./$(NAME) test_file/mandatory.txt
 
 invalid: $(NAME)
 	@./$(NAME) test_file/empty.txt
