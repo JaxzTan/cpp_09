@@ -6,7 +6,7 @@
 #    By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/09 12:35:05 by chtan             #+#    #+#              #
-#    Updated: 2025/08/22 14:18:06 by jaxztan          ###   ########.fr        #
+#    Updated: 2025/09/01 11:21:00 by jaxztan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,17 +44,9 @@ fclean: clean
 re: fclean all
 
 run: $(NAME)
-	@./RPN "8 9 * 9 - 9 - 9 - 4 - 1 +"
-	@echo ""
-	@./RPN "7 7 * 7 -"
-	@echo ""
-	@./RPN "1 2 * 2 / 2 * 2 4 - +"
+	@./PmergeMe 5 1 2 4 3
 
-invalid: $(NAME)
-	@./RPN "(1 + 1)"
-	@echo ""
-	@./RPN 1 1 +
-	@echo ""
-	@./RPN "1 2 3 +"
+leaks:
+	leaks --atExit -- ./PmergeMe 5 1 2 4 3
 
 .PHONY: all clean fclean re run

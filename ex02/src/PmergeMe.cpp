@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 20:15:26 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/08/28 09:21:17 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/09/01 11:18:30 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void PmergeMe::sortDeque()
 
 void PmergeMe::printVector() const
 {
+    std::cout << "Vector: ";
     for(std::vector<int>::const_iterator it = _Vec.begin(); it != _Vec.end(); ++it)
     {
         std::cout << *it << " ";
@@ -59,6 +60,7 @@ void PmergeMe::printVector() const
 
 void PmergeMe::printDeque() const
 {
+    std::cout << "Deque: ";
     for(std::deque<int>::const_iterator it = _Deq.begin(); it != _Deq.end(); ++it)
     {
         std::cout << *it << " ";
@@ -66,10 +68,15 @@ void PmergeMe::printDeque() const
     std::cout << std::endl;
 }
 
-bool PmergeMe::isValidNumber(const std::string &str)
-{
-    ;
-}
+    bool PmergeMe::isValidNumber(const string &str)
+    {
+        for (size_t i = 0; i < str.size(); i++) {
+            if (!isdigit(str[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 void ft_error(enum error err)
 {
@@ -90,4 +97,33 @@ void ft_error(enum error err)
             std::cerr << "Error: Unknown error." << std::endl;
     }
     exit(EXIT_FAILURE);
+}
+
+bool check_num(long num)
+{
+    if (num < INT_MIN || num > INT_MAX)
+        return false;
+    return true;
+}
+
+void PmergeMe::process(int ac, char **av)
+{
+    long num;
+    for(int i = 1; i < ac; i++)
+    {
+        num = std::stol(av[i], NULL, 10);
+        if (!check_num(num))
+        {
+            ft_error(PARSE_ERROR);
+            exit(1);
+        }
+        else
+            addElement(static_cast<int>(num));
+    }
+//     std::cout << "!!!" << std::endl << "start priting vector "<< std::endl;
+//     for(std::vector<int>::iterator it = _Vec.begin(); it != _Vec.end(); ++it)
+//     {
+//         std::cout << *it << " ";
+//     }
+//     std::cout << "!!!" << std::endl << std::endl;
 }

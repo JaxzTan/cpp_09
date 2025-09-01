@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 14:21:29 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/08/27 20:21:45 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/09/01 10:59:59 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,15 @@
 #include <cstring>
 #include <cctype>
 #include <climits>
+
+# define GREEN_H "\033[0;32m" //constructor called
+# define RESET_H "\033[0m"
+# define RED_H "\033[0;31m" //destructor called
+# define BLUE_H "\033[0;34m" // getrawbit
+# define YELLOW_H "\033[0;33m" //N/A
+# define PURPLE_H "\033[0;35m" //N/A
+
+typedef std::string string;
 
 class PmergeMe{
     private:
@@ -40,6 +49,7 @@ class PmergeMe{
         void printDeque() const;
 
         bool isValidNumber(const std::string &str);
+        void process(int ac, char **av);
 
 };
 
@@ -50,4 +60,5 @@ enum error {
     EMPTY_DATA
 };
 
-void ft_error(enum error err);
+void    ft_error(enum error err);
+bool    check_num(long num);
