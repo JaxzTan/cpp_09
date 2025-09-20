@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 18:40:49 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/08/27 16:58:10 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/09/16 16:50:21 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &other)
     return *this;
 }
 
-std::map<std::string, double> BitcoinExchange::ft_get(const std::string &filename, char sep, bool trim) const
+std::map<std::string, double> BitcoinExchange::ft_get(const std::string &filename, char sep) const
 {
     std::ifstream                   file(filename);
     std::map<std::string, double>   data;
@@ -51,7 +51,7 @@ std::map<std::string, double> BitcoinExchange::ft_get(const std::string &filenam
         std::getline(iss, date, sep);
         std::getline(iss, value);
 
-        if (trim == true && !date.empty() && !value.empty())
+        if (!date.empty() && !value.empty())
         {
             date = date.substr(0, date.length() - 1);
             value = value.substr(1, value.length());
@@ -113,13 +113,13 @@ double BitcoinExchange::find(const std::string &_date) const
     return it->second;
 }
 
-void BitcoinExchange::ft_process(const string &filename, string inputFile)
+void BitcoinExchange::ft_process(const string &filename, const string &inputFile)
 {
     std::ifstream   file(inputFile);
     string          line;
     int             count_line = 0;
 
-    _Data = ft_get(filename, ',', false);
+    _Data = ft_get(filename, ',');
 
     if (!file.is_open())
     {

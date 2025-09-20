@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 18:40:52 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/08/27 16:52:51 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/09/16 16:45:44 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ class BitcoinExchange {
         BitcoinExchange(const BitcoinExchange &other);
         BitcoinExchange &operator=(const BitcoinExchange &other);
 
-        void                        ft_process(const string &filename, string inputFile);
+        void                        ft_process(const string &filename, const string &inputFile);
         void                        ft_error(error err) const;
-        std::map<string, double>    ft_get(const string &filename, char sep, bool trim) const;
+        std::map<string, double>    ft_get(const string &filename, char sep) const;
         bool                        is_valid_date(const std::string &date) const;
         double                      find(const std::string &_date) const;
         bool                        is_valid_value(const double &value) const;
