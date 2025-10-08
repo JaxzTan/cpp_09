@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 20:15:26 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/09/01 11:18:30 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/09/08 09:57:17 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,20 +32,18 @@ PmergeMe &PmergeMe::operator=(const PmergeMe &other)
     return *this;
 }
 
+void process_time(clock_t start, clock_t end, size_t size)
+{
+    double time;
+    
+    time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1e6;
+    std::cout << "\nSorting time for " << size << " elements is = " << time << " µs\n";
+}
+
 void PmergeMe::addElement(int element)
 {
     _Vec.push_back(element);
     _Deq.push_back(element);
-}
-
-void PmergeMe::sortVector()
-{
-    std::sort(_Vec.begin(), _Vec.end());
-}
-
-void PmergeMe::sortDeque()
-{
-    std::sort(_Deq.begin(), _Deq.end());
 }
 
 void PmergeMe::printVector() const
@@ -91,7 +89,7 @@ void ft_error(enum error err)
             std::cerr << "Error: Parse error." << std::endl;
             break;
         case EMPTY_DATA:
-            std::cerr << "Error: No valid data to process." << std::endl;
+            std::cerr << "Error: No valid data to ft_parse." << std::endl;
             break;
         default:
             std::cerr << "Error: Unknown error." << std::endl;
@@ -106,7 +104,7 @@ bool check_num(long num)
     return true;
 }
 
-void PmergeMe::process(int ac, char **av)
+bool PmergeMe::ft_parse(int ac, char **av)
 {
     long num;
     for(int i = 1; i < ac; i++)
@@ -115,15 +113,48 @@ void PmergeMe::process(int ac, char **av)
         if (!check_num(num))
         {
             ft_error(PARSE_ERROR);
-            exit(1);
+            return false;
         }
         else
             addElement(static_cast<int>(num));
     }
+    return true;
+}
+    // std::cout << "Before: ";
+    // for(int i = 1; i < ac; i++)
+    // {
+    //     std::cout << av[i] << " ";
+    // }
+    // std::sort(_Vec.begin(), _Vec.end());
+    // std::cout << std::endl << "After: ";
+    // for(int i = 0; i < ac - 1; i++)
+    // {
+    //     std::cout << _Vec[i] << " ";
+    // }
+    // std::cout << std::endl;
 //     std::cout << "!!!" << std::endl << "start priting vector "<< std::endl;
 //     for(std::vector<int>::iterator it = _Vec.begin(); it != _Vec.end(); ++it)
 //     {
 //         std::cout << *it << " ";
 //     }
 //     std::cout << "!!!" << std::endl << std::endl;
+
+bool ft_process(int ac, char **av)
+{
+    PmergeMe apakabar;
+    if (!apakabar.ft_parse(ac, av))
+        return false;
+    apakabar.sort();
+    std::cout << YELLOW_H << "Before: " << RESET_H << std::endl;
+    for(int i = 1; i < ac; i++)
+    {
+        std::cout << av[i] << " ";
+    }
+    std::cout << std::endl << std::endl;
+    std::cout << PURPLE_H << "After: " << RESET_H << std::endl;
+    apakabar.fordJohnsonSortVector(apakabar.getVectorSize());
+    apakabar.fordJohnsonSortDeque(apakabar.getDequeSize());
+    apakabar.printVector();
+    apakabar.printDeque();
+    return true;
 }
