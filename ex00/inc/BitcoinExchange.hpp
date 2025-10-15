@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 18:40:52 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/09/16 16:45:44 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/10/15 21:05:33 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,13 @@ enum error{
     INVALID_INPUT,
     FILE_NOT_FOUND,
     PARSE_ERROR,
-    EMPTY_DATA
+    EMPTY_DATA,
+    NEGATIVE_VALUE
 };
 
 class BitcoinExchange {
     private:
-        // error _error;
         std::map<string, double> _Data;
-        // std::map<string, double> _InputData;
 
     public:
         BitcoinExchange();

@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 18:40:49 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/09/16 16:50:21 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/10/15 21:35:14 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ std::map<std::string, double> BitcoinExchange::ft_get(const std::string &filenam
             date = date.substr(0, date.length() - 1);
             value = value.substr(1, value.length());
         }
-        if (date.empty() || value.empty())
+        if (date.empty() || value.empty()) // in case of empty line
             date = "0000-00-00", value = "0";
         data.insert(std::make_pair(date, std::stod(value)));
     }
@@ -94,7 +94,7 @@ bool    BitcoinExchange::is_valid_date(const std::string &date) const
 
 bool BitcoinExchange::is_valid_value(const double &value) const
 {
-    if (value <= 0 || value > 1000)
+    if (value < 0 || value > 1000)
         return false;
     return true;
 }
@@ -126,6 +126,7 @@ void BitcoinExchange::ft_process(const string &filename, const string &inputFile
         ft_error(FILE_NOT_FOUND);
         exit(EXIT_FAILURE);
     }
+
     std::cout << YELLOW << "Bitcoin Exchange Data:" << RESET << std::endl << std::endl;
     std::getline(file, line);
 
@@ -176,6 +177,9 @@ void    BitcoinExchange::ft_error(error err) const
             break;
         case EMPTY_DATA:
             std::cerr << "Error: Empty data." << std::endl;
+            break;
+        case NEGATIVE_VALUE:
+            std::cerr << "Error: Negative value." << std::endl;
             break;
         default:
             std::cerr << "Error: Unknown error." << std::endl;
