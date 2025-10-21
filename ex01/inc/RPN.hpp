@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 13:51:25 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/08/21 14:12:40 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/10/21 11:22:20 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ typedef std::string str;
 enum Error {
     BAD_ARG,
     BAD_EXPRESS,
-    FAIL_COMPUTE
+    FAIL_COMPUTE,
+    EXTRA_ELEMENT
 };
 
 bool err_msg(Error code);

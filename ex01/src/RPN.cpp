@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/21 13:51:56 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/08/21 14:14:58 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/10/21 11:22:11 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ bool err_msg(Error code)
         case BAD_ARG: std::cerr << "Invalid argument. Expected => ./RPN \"2 3 +\"\n"; break;
         case BAD_EXPRESS: std::cerr << "Only allowed numbers and operator: + - * /\n"; break; 
         case FAIL_COMPUTE: std::cerr << "Cannot compute\n"; break;
+        case EXTRA_ELEMENT: std::cerr << "The expression has extra elements after evaluation\n"; break;
     }
     return EXIT_FAILURE;
 }
