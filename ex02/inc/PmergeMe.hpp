@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 14:21:29 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/09/08 11:33:16 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/10/21 10:05:21 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,16 +51,19 @@ class PmergeMe{
         PmergeMe &operator=(const PmergeMe &other);
         ~PmergeMe();
 
-        void    addElement(int element);
-        bool    sort();
+        void    	addElement(int element);
 
-        void    printVector() const;
-        size_t	getVectorSize(void) const;
-        void    fordJohnsonSortVector(int unitSize);
+        void    	printVector() const;
+        size_t		getVectorSize(void) const;
+		std::string	strVec() const;
+		std::vector<int>	&getVector(void) { return (_Vec); };
+        void    	fordJohnsonSortVector(int unitSize);
 
     
         void    printDeque() const;
         size_t  getDequeSize(void) const;
+		std::string	strDeque() const;
+		std::deque<int>	&getDeque(void) { return (_Deq); };
         void    fordJohnsonSortDeque(int unitSize);
 
 

@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 22:28:21 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/09/08 11:33:51 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/10/21 09:48:08 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,17 @@ long	jacobsthalGenerator(long n)
 		prev = curr;
 		curr = next;
 	}
-	return (curr);
+	return (curr);	
+}
+
+std::string PmergeMe::strDeque() const
+{
+	std::string result;
+	for (std::deque<int>::const_iterator it = _Deq.begin(); it != _Deq.end(); ++it)
+	{
+		result += std::to_string(*it) + " ";
+	}
+	return result;
 }
 
 size_t	PmergeMe::getDequeSize(void) const

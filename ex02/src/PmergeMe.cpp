@@ -6,11 +6,13 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 20:15:26 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/09/08 09:57:17 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/10/21 10:05:03 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/PmergeMe.hpp"
+
+int numOfComparisons = 0;
 
 PmergeMe::PmergeMe()
 {}
@@ -32,13 +34,13 @@ PmergeMe &PmergeMe::operator=(const PmergeMe &other)
     return *this;
 }
 
-void process_time(clock_t start, clock_t end, size_t size)
-{
-    double time;
+// void process_time(clock_t start, clock_t end, size_t size)
+// {
+//     double time;
     
-    time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1e6;
-    std::cout << "\nSorting time for " << size << " elements is = " << time << " µs\n";
-}
+//     time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1e6;
+//     std::cout << "\nSorting time for " << size << " elements is = " << time << " µs\n";
+// }
 
 void PmergeMe::addElement(int element)
 {
@@ -144,17 +146,44 @@ bool ft_process(int ac, char **av)
     PmergeMe apakabar;
     if (!apakabar.ft_parse(ac, av))
         return false;
-    apakabar.sort();
-    std::cout << YELLOW_H << "Before: " << RESET_H << std::endl;
-    for(int i = 1; i < ac; i++)
+    clock_t		dequeStartTime = clock(); // number of CPU clock ticks elapsed
+    std::cout << BLUE_H << "[ DEQUE CONTAINER ]\n" << RESET_H;
+    std::cout << YELLOW_H << "Before: " << apakabar.strDeque() << RESET_H << std::endl;
+    apakabar.fordJohnsonSortDeque(1);
+    std::cout << YELLOW_H << "After: " << apakabar.strDeque() << RESET_H << std::endl;
+    clock_t		dequeEndTime = clock();
+    if (!isSorted(apakabar.getDeque()))
     {
-        std::cout << av[i] << " ";
+        std::cout << RED_H "Fatal: sequence not sorted: " ;
+        apakabar.printDeque();
+        exit(123);
     }
+    std::cout << GREEN_H "Sorted successfully!" RESET_H << std::endl;
+		double dequeTimeElapsed = static_cast<double>(dequeEndTime - dequeStartTime) / CLOCKS_PER_SEC * 1000000;
+		std::cout << YELLOW_H "Time to process a range of " << apakabar.getDequeSize()
+				<< " elements with std::deque: "
+				<< dequeTimeElapsed << " us\n" RESET_H;
+		std::cout << "Num of comparisons: " << numOfComparisons << std::endl;
+
     std::cout << std::endl << std::endl;
-    std::cout << PURPLE_H << "After: " << RESET_H << std::endl;
-    apakabar.fordJohnsonSortVector(apakabar.getVectorSize());
-    apakabar.fordJohnsonSortDeque(apakabar.getDequeSize());
-    apakabar.printVector();
-    apakabar.printDeque();
+    numOfComparisons = 0;
+    clock_t		vectorStartTime = clock(); // number of CPU clock ticks elapsed
+    std::cout << BLUE_H << "[ VECTOR CONTAINER ]\n" << RESET_H;
+    std::cout << YELLOW_H << "Before: " << apakabar.strVec() << RESET_H << std::endl;
+    apakabar.fordJohnsonSortVector(1);
+    std::cout << YELLOW_H << "After: " << apakabar.strVec() << RESET_H << std::endl;
+    clock_t		vectorEndTime = clock();
+    if (!isSorted(apakabar.getVector()))
+    {
+        std::cout << RED_H "Fatal: sequence not sorted: " ;
+        apakabar.printVector();
+        exit(123);
+    }
+    std::cout << GREEN_H "Sorted successfully!" RESET_H << std::endl;
+		double vectorTimeElapsed = static_cast<double>(vectorEndTime - vectorStartTime) / CLOCKS_PER_SEC * 1000000;
+		std::cout << YELLOW_H "Time to process a range of " << apakabar.getVectorSize()
+				<< " elements with std::vector: "
+				<< vectorTimeElapsed << " us\n" RESET_H;
+		std::cout << "Num of comparisons: " << numOfComparisons << std::endl;
     return true;
 }
