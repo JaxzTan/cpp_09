@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 18:40:49 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/10/15 21:35:14 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/10/21 11:08:22 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,16 @@ BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &other)
     return *this;
 }
 
-std::map<std::string, double> BitcoinExchange::ft_get(const std::string &filename, char sep) const
+std::map<std::string, float> BitcoinExchange::ft_get(const std::string &filename, char sep) const
 {
     std::ifstream                   file(filename);
-    std::map<std::string, double>   data;
+    std::map<std::string, float>   data;
     std::string                     line;
 
     if (!file.is_open() || std::strcmp(filename.c_str(), "data.csv") != 0)
     {
         ft_error(FILE_NOT_FOUND);
-        exit(EXIT_FAILURE);
+        return(std::map<std::string, float>());
     }
     std::getline(file, line);
 
@@ -92,25 +92,47 @@ bool    BitcoinExchange::is_valid_date(const std::string &date) const
     return true;
 }
 
-bool BitcoinExchange::is_valid_value(const double &value) const
+bool BitcoinExchange::is_valid_value(const float &value) const
 {
     if (value < 0 || value > 1000)
         return false;
     return true;
 }
 
-double BitcoinExchange::find(const std::string &_date) const
+float BitcoinExchange::find(const std::string &_date) const
 {
-    std::map<std::string, double>::const_iterator it = _Data.lower_bound(_date);
+    std::map<std::string, float>::const_iterator it = _Data.lower_bound(_date);
 
-    if (it != _Data.end() && it->first == _date) {
+    if (it != _Data.end() && it->first == _date)
         return it->second;
-    }
-    if (it == _Data.begin()) {
-        return 0.0;
-    }
+    if (it == _Data.begin()) 
+        return 0.0f;
     --it;
-    return it->second;
+    return (it->second);
+}
+
+void    BitcoinExchange::ft_error(error err) const
+{
+    switch (err) {
+        case INVALID_INPUT:
+        std::cerr << "Error: Invalid input." << std::endl;
+        break;
+        case FILE_NOT_FOUND:
+        std::cerr << "Error: File not found." << std::endl;
+        break;
+        case PARSE_ERROR:
+        std::cerr << "Error: Parse error." << std::endl;
+        break;
+        case EMPTY_DATA:
+        std::cerr << "Error: Empty data." << std::endl;
+        break;
+        case NEGATIVE_VALUE:
+        std::cerr << "Error: Negative value." << std::endl;
+        break;
+        default:
+        std::cerr << "Error: Unknown error." << std::endl;
+        break;
+    }
 }
 
 void BitcoinExchange::ft_process(const string &filename, const string &inputFile)
@@ -121,21 +143,21 @@ void BitcoinExchange::ft_process(const string &filename, const string &inputFile
 
     _Data = ft_get(filename, ',');
 
-    if (!file.is_open())
+    if (!file.is_open() || _Data.empty())
     {
         ft_error(FILE_NOT_FOUND);
-        exit(EXIT_FAILURE);
+        return;
     }
 
     std::cout << YELLOW << "Bitcoin Exchange Data:" << RESET << std::endl << std::endl;
-    std::getline(file, line);
+    std::getline(file, line); // skip the first line
 
     while (std::getline(file, line))
     {
         std::istringstream  iss(line);
         string              date;
         string              value;
-        double              answer = 0.0;
+        float               answer = 0.0f;
     
         std::getline(iss, date, '|');
         std::getline(iss, value);
@@ -147,42 +169,18 @@ void BitcoinExchange::ft_process(const string &filename, const string &inputFile
         }
         answer = find(date);
         count_line++;
-        if (!is_valid_value(answer) || date.empty() || value.empty() || !is_valid_value(std::stod(value))
+        if (!is_valid_value(answer) || date.empty() || value.empty() || !is_valid_value(std::stof(value))
         || !is_valid_date(date))
         {
             ft_error(INVALID_INPUT);
             continue;
         }
-        std::cout << date << " => " << value << " = " << (answer * std::stod(value)) << std::endl;
+        std::cout << date << " => " << value << " = " << (answer * std::stof(value)) << std::endl;
     }
     file.close();
     if (count_line == 0)
     {
         ft_error(EMPTY_DATA);
-        exit(1);
-    }
-}
-
-void    BitcoinExchange::ft_error(error err) const
-{
-    switch (err) {
-        case INVALID_INPUT:
-            std::cerr << "Error: Invalid input." << std::endl;
-            break;
-        case FILE_NOT_FOUND:
-            std::cerr << "Error: File not found." << std::endl;
-            break;
-        case PARSE_ERROR:
-            std::cerr << "Error: Parse error." << std::endl;
-            break;
-        case EMPTY_DATA:
-            std::cerr << "Error: Empty data." << std::endl;
-            break;
-        case NEGATIVE_VALUE:
-            std::cerr << "Error: Negative value." << std::endl;
-            break;
-        default:
-            std::cerr << "Error: Unknown error." << std::endl;
-            break;
+        return ;
     }
 }

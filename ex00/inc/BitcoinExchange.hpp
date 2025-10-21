@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 18:40:52 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/10/15 21:05:33 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/10/21 10:33:04 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ enum error{
 
 class BitcoinExchange {
     private:
-        std::map<string, double> _Data;
+        std::map<string, float> _Data;
 
     public:
         BitcoinExchange();
@@ -45,8 +45,8 @@ class BitcoinExchange {
 
         void                        ft_process(const string &filename, const string &inputFile);
         void                        ft_error(error err) const;
-        std::map<string, double>    ft_get(const string &filename, char sep) const;
+        std::map<string, float>    ft_get(const string &filename, char sep) const;
         bool                        is_valid_date(const std::string &date) const;
-        double                      find(const std::string &_date) const;
-        bool                        is_valid_value(const double &value) const;
+        float                      find(const std::string &_date) const;
+        bool                        is_valid_value(const float &value) const;
     };
