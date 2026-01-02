@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 18:40:49 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/10/21 11:08:22 by jaxztan          ###   ########.fr       */
+/*   Updated: 2026/01/02 14:05:11 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,13 @@ BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &other)
     }
     return *this;
 }
-
-std::map<std::string, float> BitcoinExchange::ft_get(const std::string &filename, char sep) const
+/**
+ * @brief Reads Bitcoin exchange data from a CSV file and stores it in a map.
+ */
+std::map<std::string, float> BitcoinExchange::ft_get(const std::string &filename, char separator) const
 {
     std::ifstream                   file(filename);
-    std::map<std::string, float>   data;
+    std::map<std::string, float>	data;
     std::string                     line;
 
     if (!file.is_open() || std::strcmp(filename.c_str(), "data.csv") != 0)
@@ -42,13 +44,13 @@ std::map<std::string, float> BitcoinExchange::ft_get(const std::string &filename
         ft_error(FILE_NOT_FOUND);
         return(std::map<std::string, float>());
     }
-    std::getline(file, line);
+    std::getline(file, line); // skip the first line
 
     while (std::getline(file, line)) {
         std::istringstream iss(line);
         string              date;
         string              value;
-        std::getline(iss, date, sep);
+        std::getline(iss, date, separator);
         std::getline(iss, value);
 
         if (!date.empty() && !value.empty())
@@ -99,11 +101,17 @@ bool BitcoinExchange::is_valid_value(const float &value) const
     return true;
 }
 
-float BitcoinExchange::find(const std::string &_date) const
+/**
+ * first use lovwer_bound to find the first element not less than the given date
+ * if found and equal, return the value
+ * if data earlier than the first date, return 0
+ * else return the previous element's value
+ */
+float BitcoinExchange::find(const std::string &date) const
 {
-    std::map<std::string, float>::const_iterator it = _Data.lower_bound(_date);
+    std::map<std::string, float>::const_iterator it = _Data.lower_bound(date);
 
-    if (it != _Data.end() && it->first == _date)
+    if (it != _Data.end() && it->first == date)
         return it->second;
     if (it == _Data.begin()) 
         return 0.0f;
@@ -125,9 +133,6 @@ void    BitcoinExchange::ft_error(error err) const
         break;
         case EMPTY_DATA:
         std::cerr << "Error: Empty data." << std::endl;
-        break;
-        case NEGATIVE_VALUE:
-        std::cerr << "Error: Negative value." << std::endl;
         break;
         default:
         std::cerr << "Error: Unknown error." << std::endl;
