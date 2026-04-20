@@ -6,35 +6,22 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 22:28:21 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/10/21 09:48:08 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/12/05 17:00:30 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/PmergeMe.hpp"
 
-long	jacobsthalGenerator(long n)
+std::deque<int>&	PmergeMe::getDeque(void)
 {
-	if (n == 0)
-		return (0);
-	if (n == 1)
-		return (1);
-	long	prev = 0, curr = 1;
-	for (long i = 2; i <= n; i++)
-	{
-		long	next = curr + 2 * prev;
-		prev = curr;
-		curr = next;
-	}
-	return (curr);	
+	return (_Deq);
 }
 
 std::string PmergeMe::strDeque() const
 {
 	std::string result;
-	for (std::deque<int>::const_iterator it = _Deq.begin(); it != _Deq.end(); ++it)
-	{
-		result += std::to_string(*it) + " ";
-	}
+	for (int i = 0; i < static_cast<int>(_Deq.size()); i++)
+		result += std::to_string(_Deq[i]) + " ";
 	return result;
 }
 
@@ -43,17 +30,22 @@ size_t	PmergeMe::getDequeSize(void) const
 	return (this->_Deq.size());
 }
 
+/**
+ * unitSize = size of “chunks” being compared/sorted in this recursion
+ */
 void	PmergeMe::fordJohnsonSortDeque(int unitSize)
 {
 	int			numOfUnits = _Deq.size() / unitSize;
+
 	if (numOfUnits < 2)
 		return ;
 	
-	bool	hasStraggler = numOfUnits % 2 == 1;
+	bool	hasStraggler = numOfUnits % 2 == 1; // Check for straggler unit(total numbers is odd)
 
 	std::deque<int>::iterator	start = _Deq.begin();
 	std::deque<int>::iterator	end = advanceIter(_Deq.begin(), numOfUnits * unitSize - (hasStraggler * unitSize));
 
+	// Phase 1: Pairwise Comparison and Swap
 	for (std::deque<int>::iterator it = start; it != end; std::advance(it, 2 * unitSize))
 	{
 		std::deque<int>::iterator	firstUnit = advanceIter(it, unitSize - 1);
@@ -62,8 +54,11 @@ void	PmergeMe::fordJohnsonSortDeque(int unitSize)
 		if (*firstUnit > *secondUnit)
 			swapUnits(firstUnit, unitSize);
 	}
+
+	// Phase 2: Recursive Sorting
 	fordJohnsonSortDeque(unitSize * 2);
 
+	// Phase 3: Jacobsthal Insertion
 	std::deque<std::deque<int>::iterator>	main;
 	std::deque<std::deque<int>::iterator>	pend;
 	main.insert(main.end(), advanceIter(_Deq.begin(), unitSize - 1));
@@ -107,6 +102,7 @@ void	PmergeMe::fordJohnsonSortDeque(int unitSize)
 		offset = 0;
 	}
 
+	//Phase 4: Final Merge and Reconstruction
 	for (long unsigned int i = 0; i < pend.size(); i++)
 	{
 		std::deque<std::deque<int>::iterator>::iterator	currPend = pend.begin() + i;

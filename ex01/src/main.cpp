@@ -58,9 +58,6 @@ int main(int ac, char **av)
             a = list.back();
             list.pop_back();
             list.push_back(compute(a, b, s[i]));
-            if (list.size() != 1)
-                return (err_msg(EXTRA_ELEMENT));
-
         }
 
         else if (s[i] == ' ')

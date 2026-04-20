@@ -6,19 +6,22 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 22:29:02 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/10/21 09:50:47 by jaxztan          ###   ########.fr       */
+/*   Updated: 2025/10/22 09:08:13 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/PmergeMe.hpp"
 
+std::vector<int>	&PmergeMe::getVector(void)
+{
+	return (_Vec);
+}
+
 std::string PmergeMe::strVec() const
 {
 	std::string result;
-	for (std::vector<int>::const_iterator it = _Vec.begin(); it != _Vec.end(); ++it)
-	{
-		result += std::to_string(*it) + " ";
-	}
+	for (int i = 0; i < static_cast<int>(_Vec.size()); i++)
+		result += std::to_string(_Vec[i]) + " ";
 	return result;
 }
 

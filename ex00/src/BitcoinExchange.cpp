@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 18:40:49 by jaxztan           #+#    #+#             */
-/*   Updated: 2026/01/02 14:05:11 by jaxztan          ###   ########.fr       */
+/*   Updated: 2026/04/14 15:07:56 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &other)
     }
     return *this;
 }
+
 /**
  * @brief Reads Bitcoin exchange data from a CSV file and stores it in a map.
  */

@@ -57,4 +57,44 @@ invalid: $(NAME)
 	@echo ""
 	@./RPN "1 2 3 +"
 
-.PHONY: all clean fclean re run
+test: $(NAME)
+	@printf '\033[1m=== RPN Test Suite ===\033[0m\n\n'; \
+	EXPECTED="14 12 42 42 0 14 15 4 2 0"; \
+	section=""; in_block=0; valid_idx=1; PASS=0; FAIL=0; \
+	while IFS= read -r line; do \
+		if [ "$$line" = "---" ]; then \
+			if [ "$$in_block" = "0" ]; then \
+				in_block=1; \
+				printf '\033[1;34m[ %s ]\033[0m\n' "$$section"; \
+			else \
+				in_block=0; printf '\n'; \
+			fi; \
+		elif [ "$$in_block" = "0" ] && [ -n "$$line" ]; then \
+			section="$$line"; \
+		elif [ "$$in_block" = "1" ] && [ -n "$$line" ]; then \
+			expr=$$(printf '%s' "$$line" | sed 's/^"//;s/"$$//'); \
+			actual=$$(./RPN "$$expr" 2>&1); rc=$$?; \
+			if [ "$$section" = "valid" ]; then \
+				exp=$$(echo "$$EXPECTED" | tr ' ' '\n' | sed -n "$${valid_idx}p"); \
+				valid_idx=$$((valid_idx + 1)); \
+				if [ "$$actual" = "$$exp" ]; then \
+					printf '  \033[32m[PASS]\033[0m  %-34s expected: %-4s  got: %s\n' "$$expr" "$$exp" "$$actual"; \
+					PASS=$$((PASS + 1)); \
+				else \
+					printf '  \033[31m[FAIL]\033[0m  %-34s expected: %-4s  got: %s\n' "$$expr" "$$exp" "$$actual"; \
+					FAIL=$$((FAIL + 1)); \
+				fi; \
+			else \
+				if [ "$$rc" != "0" ]; then \
+					printf '  \033[32m[PASS]\033[0m  %-34s => %s\n' "$$expr" "$$actual"; \
+					PASS=$$((PASS + 1)); \
+				else \
+					printf '  \033[31m[FAIL]\033[0m  %-34s => expected error, got: %s\n' "$$expr" "$$actual"; \
+					FAIL=$$((FAIL + 1)); \
+				fi; \
+			fi; \
+		fi; \
+	done < Files/test_case.txt; \
+	printf '\033[1mResults: \033[32m%d passed\033[0m\033[1m, \033[31m%d failed\033[0m\n' "$$PASS" "$$FAIL"
+
+.PHONY: all clean fclean re run test

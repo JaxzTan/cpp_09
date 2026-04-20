@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 18:40:52 by jaxztan           #+#    #+#             */
-/*   Updated: 2026/01/02 13:38:59 by jaxztan          ###   ########.fr       */
+/*   Updated: 2026/04/15 09:30:40 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ enum error{
     INVALID_INPUT,
     FILE_NOT_FOUND,
     PARSE_ERROR,
-    EMPTY_DATA,
+    EMPTY_DATA
 };
 
 class BitcoinExchange {

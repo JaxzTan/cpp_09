@@ -6,33 +6,24 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 14:21:29 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/10/21 10:05:21 by jaxztan          ###   ########.fr       */
+/*   Updated: 2026/04/20 10:22:55 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <iostream>
-#include <vector>
-#include <deque>
-#include <list>
-#include <cstdlib>
-#include <ctime>
-#include <cstring>
-#include <cctype>
-#include <climits>
-#include <cassert>
 
-# define GREEN_H "\033[0;32m" //constructor called
+# define GREEN_H "\033[0;32m"
 # define RESET_H "\033[0m"
-# define RED_H "\033[0;31m" //destructor called
-# define BLUE_H "\033[0;34m" // getrawbit
-# define YELLOW_H "\033[0;33m" //N/A
-# define PURPLE_H "\033[0;35m" //N/A
+# define RED_H "\033[0;31m"
+# define BLUE_H "\033[0;34m"
+# define YELLOW_H "\033[0;33m"
+# define PURPLE_H "\033[0;35m"
 
 extern int numOfComparisons;
-
 typedef std::string string;
+
 enum error {
     INVALID_INPUT,
     FILE_NOT_FOUND,
@@ -42,8 +33,8 @@ enum error {
 
 class PmergeMe{
     private:
-        std::vector<int> _Vec;
-        std::deque<int> _Deq;
+        std::vector<int>	_Vec;
+        std::deque<int>		_Deq;
 
     public:
         PmergeMe();
@@ -51,37 +42,36 @@ class PmergeMe{
         PmergeMe &operator=(const PmergeMe &other);
         ~PmergeMe();
 
-        void    	addElement(int element);
+        void    			addElement(int element);
 
-        void    	printVector() const;
-        size_t		getVectorSize(void) const;
-		std::string	strVec() const;
-		std::vector<int>	&getVector(void) { return (_Vec); };
-        void    	fordJohnsonSortVector(int unitSize);
-
+        void    			fordJohnsonSortVector(int unitSize);
+        void    			printVector() const;
+        size_t				getVectorSize(void) const;
+		std::string			strVec() const;
+		std::vector<int>	&getVector(void);
     
-        void    printDeque() const;
-        size_t  getDequeSize(void) const;
-		std::string	strDeque() const;
-		std::deque<int>	&getDeque(void) { return (_Deq); };
-        void    fordJohnsonSortDeque(int unitSize);
+        void				printDeque() const;
+        size_t				getDequeSize(void) const;
+		std::string			strDeque() const;
+		std::deque<int>		&getDeque(void);
+        void				fordJohnsonSortDeque(int unitSize);
 
 
-        bool    isValidNumber(const std::string &str);
-        bool    ft_parse(int ac, char **av);
+        bool    			isValidNumber(const std::string &str);
+        bool			    ft_parse(int ac, char **av);
 
     };
     
-long	jacobsthalGenerator(long n);
-    
-void    process_time(clock_t start, clock_t end, size_t size);
-bool    ft_process(int ac, char **av);
-void    ft_error(enum error err);
-bool    check_num(long num);
+long						jacobsthalGenerator(long n);
+bool					    ft_process(int ac, char **av);
+void					    ft_error(enum error err);
 
+/**
+ * @brief Advances an iterator by a given number of steps and returns the new iterator
+ */
 template <typename T>
 T advanceIter(T it, int steps)
-{
+{	
 	std::advance(it, steps);
 	return (it);
 }
@@ -93,10 +83,20 @@ bool	compare(T left, T right)
 	return (*left < *right);
 }
 
+/**
+ * @brief Swaps two adjacent units (blocks) of elements within a container.
+ * 
+ * This function is given an iterator to the last element of the first unit
+ * and swaps every element in that unit with the corresponding element in the
+ * immediately following (adjacent) unit.
+ * 
+ * @tparam T The type of the iterator.
+ * @param firstUnit An iterator pointing to the last element of the first unit.
+ * @param unitSize The number of elements in each unit.
+ */
 template <typename T>
-void	swapUnits(T firstUnit, int unitSize)
-{
-	T	start = advanceIter(firstUnit, -unitSize + 1);
+void	swapUnits(T firstUnit, int unitSize) {
+	T	start = advanceIter(firstUnit, - unitSize + 1);
 	T	end = advanceIter(start, unitSize);
 	while (start != end)
 	{
@@ -105,6 +105,7 @@ void	swapUnits(T firstUnit, int unitSize)
 	}
 }
 
+// simply check is the numbers inside container is sorted or not
 template <typename T>
 bool	isSorted(T &container)
 {

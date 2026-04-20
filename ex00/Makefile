@@ -6,7 +6,7 @@
 #    By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/09 12:35:05 by chtan             #+#    #+#              #
-#    Updated: 2025/08/22 15:00:25 by jaxztan          ###   ########.fr        #
+#    Updated: 2026/04/15 09:31:41 by jaxztan          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,12 +44,12 @@ fclean: clean
 re: fclean all
 
 run: $(NAME)
-	@./$(NAME) test_file/mandatory.txt
+	@./$(NAME) Files/mandatory.txt
 
 invalid: $(NAME)
-	@./$(NAME) test_file/empty.txt
+	@./$(NAME) Files/empty.txt
 	@sleep 1
 	@clear
-	@./$(NAME) test_file/invalid.txt
+	@./$(NAME) Files/invalid.txt
 
 .PHONY: all clean fclean re run
