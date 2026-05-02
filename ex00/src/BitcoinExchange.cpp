@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   BitcoinExchange.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 18:40:49 by jaxztan           #+#    #+#             */
-/*   Updated: 2026/04/14 15:07:56 by jaxztan          ###   ########.fr       */
+/*   Updated: 2026/05/02 15:19:58 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/BitcoinExchange.hpp"
+#include "BitcoinExchange.hpp"
 
 BitcoinExchange::BitcoinExchange()
 {}
@@ -31,24 +31,42 @@ BitcoinExchange &BitcoinExchange::operator=(const BitcoinExchange &other)
     return *this;
 }
 
+// C++98 helper: convert string to int via istringstream
+static int ft_stoi(const std::string &s)
+{
+    std::istringstream ss(s);
+    int val;
+    ss >> val;
+    return val;
+}
+
+// C++98 helper: convert string to float via istringstream
+static float ft_stof(const std::string &s)
+{
+    std::istringstream ss(s);
+    float val;
+    ss >> val;
+    return val;
+}
+
 /**
  * @brief Reads Bitcoin exchange data from a CSV file and stores it in a map.
  */
 std::map<std::string, float> BitcoinExchange::ft_get(const std::string &filename, char separator) const
 {
-    std::ifstream                   file(filename);
-    std::map<std::string, float>	data;
+    std::ifstream                   file(filename.c_str());
+    std::map<std::string, float>    data;
     std::string                     line;
 
     if (!file.is_open() || std::strcmp(filename.c_str(), "data.csv") != 0)
     {
         ft_error(FILE_NOT_FOUND);
-        return(std::map<std::string, float>());
+        return (std::map<std::string, float>());
     }
     std::getline(file, line); // skip the first line
 
     while (std::getline(file, line)) {
-        std::istringstream iss(line);
+        std::istringstream  iss(line);
         string              date;
         string              value;
         std::getline(iss, date, separator);
@@ -59,29 +77,30 @@ std::map<std::string, float> BitcoinExchange::ft_get(const std::string &filename
             date = date.substr(0, date.length() - 1);
             value = value.substr(1, value.length());
         }
-        if (date.empty() || value.empty()) // in case of empty line
+        if (date.empty() || value.empty())
             date = "0000-00-00", value = "0";
-        data.insert(std::make_pair(date, std::stod(value)));
+        data.insert(std::make_pair(date, ft_stof(value)));
     }
     file.close();
     if (data.empty())
         ft_error(EMPTY_DATA);
-    return(data);
+    return (data);
 }
 
-static bool	isLeapYear(int year)
+static bool isLeapYear(int year)
 {
-	return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
+    return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
 }
 
-bool    BitcoinExchange::is_valid_date(const std::string &date) const
+bool BitcoinExchange::is_valid_date(const std::string &date) const
 {
     if (date.length() != 10 || date[4] != '-' || date[7] != '-')
         return false;
 
-    int year = std::stoi(date.substr(0, 4));
-    int month = std::stoi(date.substr(5, 2));
-    int day = std::stoi(date.substr(8, 2));
+    int year  = ft_stoi(date.substr(0, 4));
+    int month = ft_stoi(date.substr(5, 2));
+    int day   = ft_stoi(date.substr(8, 2));
+
     if (year < 2009 || year > 2022 || month < 1 || month > 12 || day < 1)
         return false;
 
@@ -103,7 +122,7 @@ bool BitcoinExchange::is_valid_value(const float &value) const
 }
 
 /**
- * first use lovwer_bound to find the first element not less than the given date
+ * first use lower_bound to find the first element not less than the given date
  * if found and equal, return the value
  * if data earlier than the first date, return 0
  * else return the previous element's value
@@ -114,36 +133,36 @@ float BitcoinExchange::find(const std::string &date) const
 
     if (it != _Data.end() && it->first == date)
         return it->second;
-    if (it == _Data.begin()) 
+    if (it == _Data.begin())
         return 0.0f;
     --it;
     return (it->second);
 }
 
-void    BitcoinExchange::ft_error(error err) const
+void BitcoinExchange::ft_error(error err) const
 {
     switch (err) {
         case INVALID_INPUT:
-        std::cerr << "Error: Invalid input." << std::endl;
-        break;
+            std::cerr << "Error: Invalid input." << std::endl;
+            break;
         case FILE_NOT_FOUND:
-        std::cerr << "Error: File not found." << std::endl;
-        break;
+            std::cerr << "Error: File not found." << std::endl;
+            break;
         case PARSE_ERROR:
-        std::cerr << "Error: Parse error." << std::endl;
-        break;
+            std::cerr << "Error: Parse error." << std::endl;
+            break;
         case EMPTY_DATA:
-        std::cerr << "Error: Empty data." << std::endl;
-        break;
+            std::cerr << "Error: Empty data." << std::endl;
+            break;
         default:
-        std::cerr << "Error: Unknown error." << std::endl;
-        break;
+            std::cerr << "Error: Unknown error." << std::endl;
+            break;
     }
 }
 
 void BitcoinExchange::ft_process(const string &filename, const string &inputFile)
 {
-    std::ifstream   file(inputFile);
+    std::ifstream   file(inputFile.c_str());
     string          line;
     int             count_line = 0;
 
@@ -164,7 +183,7 @@ void BitcoinExchange::ft_process(const string &filename, const string &inputFile
         string              date;
         string              value;
         float               answer = 0.0f;
-    
+
         std::getline(iss, date, '|');
         std::getline(iss, value);
 
@@ -175,18 +194,18 @@ void BitcoinExchange::ft_process(const string &filename, const string &inputFile
         }
         answer = find(date);
         count_line++;
-        if (!is_valid_value(answer) || date.empty() || value.empty() || !is_valid_value(std::stof(value))
-        || !is_valid_date(date))
+        if (!is_valid_value(answer) || date.empty() || value.empty()
+            || !is_valid_value(ft_stof(value)) || !is_valid_date(date))
         {
             ft_error(INVALID_INPUT);
             continue;
         }
-        std::cout << date << " => " << value << " = " << (answer * std::stof(value)) << std::endl;
+        std::cout << date << " => " << value << " = " << (answer * ft_stof(value)) << std::endl;
     }
     file.close();
     if (count_line == 0)
     {
         ft_error(EMPTY_DATA);
-        return ;
+        return;
     }
 }

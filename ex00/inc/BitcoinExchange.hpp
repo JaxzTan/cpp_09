@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BitcoinExchange.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
+/*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 18:40:52 by jaxztan           #+#    #+#             */
-/*   Updated: 2026/04/15 09:30:40 by jaxztan          ###   ########.fr       */
+/*   Updated: 2026/05/02 15:13:55 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <cstring>
 
 #define RED    "\033[0;31m"
 #define GREEN  "\033[0;32m"
