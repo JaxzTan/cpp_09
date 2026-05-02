@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 20:15:26 by jaxztan           #+#    #+#             */
-/*   Updated: 2026/01/02 14:19:27 by jaxztan          ###   ########.fr       */
+/*   Updated: 2026/05/02 15:01:04 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ bool PmergeMe::ft_parse(int ac, char **av)
     long num;
     for(int i = 1; i < ac; i++)
     {
-        num = std::stol(av[i], NULL, 10); // to handle all num within positive int range
+        num = std::strtol(av[i], NULL, 10); // to handle all num within positive int range
         if (num < 1 || num > INT_MAX)
         {
             ft_error(PARSE_ERROR);

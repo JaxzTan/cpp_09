@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 22:29:02 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/10/22 09:08:13 by jaxztan          ###   ########.fr       */
+/*   Updated: 2026/05/02 15:01:04 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ std::vector<int>	&PmergeMe::getVector(void)
 
 std::string PmergeMe::strVec() const
 {
-	std::string result;
+	std::ostringstream oss;
 	for (int i = 0; i < static_cast<int>(_Vec.size()); i++)
-		result += std::to_string(_Vec[i]) + " ";
-	return result;
+		oss << _Vec[i] << " ";
+	return oss.str();
 }
 
 size_t	PmergeMe::getVectorSize(void) const

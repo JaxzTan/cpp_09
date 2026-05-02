@@ -6,13 +6,23 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/22 14:21:29 by jaxztan           #+#    #+#             */
-/*   Updated: 2026/04/20 10:22:55 by jaxztan          ###   ########.fr       */
+/*   Updated: 2026/05/02 15:01:04 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
 #include <iostream>
+#include <vector>
+#include <deque>
+#include <string>
+#include <algorithm>
+#include <iterator>
+#include <climits>
+#include <ctime>
+#include <cstdlib>
+#include <cctype>
+#include <sstream>
 
 # define GREEN_H "\033[0;32m"
 # define RESET_H "\033[0m"

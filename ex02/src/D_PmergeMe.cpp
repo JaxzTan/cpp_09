@@ -6,7 +6,7 @@
 /*   By: jaxztan <jaxztan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 22:28:21 by jaxztan           #+#    #+#             */
-/*   Updated: 2025/12/05 17:00:30 by jaxztan          ###   ########.fr       */
+/*   Updated: 2026/05/02 15:01:04 by jaxztan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ std::deque<int>&	PmergeMe::getDeque(void)
 
 std::string PmergeMe::strDeque() const
 {
-	std::string result;
+	std::ostringstream oss;
 	for (int i = 0; i < static_cast<int>(_Deq.size()); i++)
-		result += std::to_string(_Deq[i]) + " ";
-	return result;
+		oss << _Deq[i] << " ";
+	return oss.str();
 }
 
 size_t	PmergeMe::getDequeSize(void) const
