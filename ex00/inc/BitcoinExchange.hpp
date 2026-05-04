@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BitcoinExchange.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: chtan <chengsoo99@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 18:40:52 by jaxztan           #+#    #+#             */
-/*   Updated: 2026/05/02 15:13:55 by chtan            ###   ########.fr       */
+/*   Updated: 2026/05/02 21:37:58 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,9 @@ enum error{
     INVALID_INPUT,
     FILE_NOT_FOUND,
     PARSE_ERROR,
-    EMPTY_DATA
+    EMPTY_DATA,
+    NOT_POSITIVE,
+    TOO_LARGE
 };
 
 class BitcoinExchange {
@@ -43,9 +45,9 @@ class BitcoinExchange {
         BitcoinExchange(const BitcoinExchange &other);
         BitcoinExchange &operator=(const BitcoinExchange &other);
 
-        void					ft_process(const string &filename, const string &inputFile);
-        void					ft_error(error err) const;
-        std::map<string, float>	ft_get(const string &filename, char sep) const;
+        void					ft_process(const string &inputFile);
+        void					ft_error(error err, const std::string &line = "") const;
+        std::map<string, float>	ft_get(const string &filename) const;
         bool					is_valid_date(const std::string &date) const;
         float					find(const std::string &_date) const;
         bool					is_valid_value(const float &value) const;

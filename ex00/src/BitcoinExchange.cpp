@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BitcoinExchange.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: chtan <chtan@student.42.fr>                +#+  +:+       +#+        */
+/*   By: chtan <chengsoo99@gmail.com>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/30 18:40:49 by jaxztan           #+#    #+#             */
-/*   Updated: 2026/05/02 15:19:58 by chtan            ###   ########.fr       */
+/*   Updated: 2026/05/02 21:53:58 by chtan            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,12 @@ static float ft_stof(const std::string &s)
 /**
  * @brief Reads Bitcoin exchange data from a CSV file and stores it in a map.
  */
-std::map<std::string, float> BitcoinExchange::ft_get(const std::string &filename, char separator) const
+std::map<std::string, float> BitcoinExchange::ft_get(const std::string &filename) const
 {
     std::ifstream                   file(filename.c_str());
     std::map<std::string, float>    data;
     std::string                     line;
+	char separator = ',';
 
     if (!file.is_open() || std::strcmp(filename.c_str(), "data.csv") != 0)
     {
@@ -72,18 +73,11 @@ std::map<std::string, float> BitcoinExchange::ft_get(const std::string &filename
         std::getline(iss, date, separator);
         std::getline(iss, value);
 
-        if (!date.empty() && !value.empty())
-        {
-            date = date.substr(0, date.length() - 1);
-            value = value.substr(1, value.length());
-        }
         if (date.empty() || value.empty())
             date = "0000-00-00", value = "0";
         data.insert(std::make_pair(date, ft_stof(value)));
     }
     file.close();
-    if (data.empty())
-        ft_error(EMPTY_DATA);
     return (data);
 }
 
@@ -139,11 +133,11 @@ float BitcoinExchange::find(const std::string &date) const
     return (it->second);
 }
 
-void BitcoinExchange::ft_error(error err) const
+void BitcoinExchange::ft_error(error err, const std::string &line) const
 {
     switch (err) {
         case INVALID_INPUT:
-            std::cerr << "Error: Invalid input." << std::endl;
+            std::cerr << "Error: bad input => " << line << std::endl;
             break;
         case FILE_NOT_FOUND:
             std::cerr << "Error: File not found." << std::endl;
@@ -154,19 +148,25 @@ void BitcoinExchange::ft_error(error err) const
         case EMPTY_DATA:
             std::cerr << "Error: Empty data." << std::endl;
             break;
+        case NOT_POSITIVE:
+            std::cerr << "Error: not a positive number." << std::endl;
+            break;
+        case TOO_LARGE:
+            std::cerr << "Error: too large a number." << std::endl;
+            break;
         default:
             std::cerr << "Error: Unknown error." << std::endl;
             break;
     }
 }
 
-void BitcoinExchange::ft_process(const string &filename, const string &inputFile)
+void BitcoinExchange::ft_process(const string &inputFile)
 {
     std::ifstream   file(inputFile.c_str());
     string          line;
     int             count_line = 0;
 
-    _Data = ft_get(filename, ',');
+    _Data = ft_get("data.csv");
 
     if (!file.is_open() || _Data.empty())
     {
@@ -183,6 +183,7 @@ void BitcoinExchange::ft_process(const string &filename, const string &inputFile
         string              date;
         string              value;
         float               answer = 0.0f;
+        float               input_value = 0.0f;
 
         std::getline(iss, date, '|');
         std::getline(iss, value);
@@ -192,15 +193,25 @@ void BitcoinExchange::ft_process(const string &filename, const string &inputFile
             date = date.substr(0, date.length() - 1);
             value = value.substr(1, value.length());
         }
-        answer = find(date);
         count_line++;
-        if (!is_valid_value(answer) || date.empty() || value.empty()
-            || !is_valid_value(ft_stof(value)) || !is_valid_date(date))
+        if (date.empty() || value.empty() || !is_valid_date(date))
         {
-            ft_error(INVALID_INPUT);
+            ft_error(INVALID_INPUT, line);
             continue;
         }
-        std::cout << date << " => " << value << " = " << (answer * ft_stof(value)) << std::endl;
+        input_value = ft_stof(value);
+        if (input_value < 0)
+        {
+            ft_error(NOT_POSITIVE);
+            continue;
+        }
+        if (input_value > 1000)
+        {
+            ft_error(TOO_LARGE);
+            continue;
+        }
+        answer = find(date);
+        std::cout << date << " => " << value << " = " << (answer * input_value) << std::endl;
     }
     file.close();
     if (count_line == 0)
